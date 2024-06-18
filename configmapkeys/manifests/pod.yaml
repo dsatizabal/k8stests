@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmaptest
+  labels:
+    app: configmapkeys
+data:
+  key1: 'test'
+  key2: 'test for key2'
+  file.yaml: |
+    apiVersion: v1
+    kind: Test
+    metadata:
+      labels:
+        purpose: test
+    specs:
+      tbd: yes
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cmtest
+  labels:
+    app: configmapkeys
+spec:
+  containers:
+  - name: configmaptest
+    image: dsatizabal/configmapkeys:v2
+    volumeMounts:
+    - name: config
+      mountPath: /etc/config/
+    env:
+      - name: TARGET_DIR
+        value: '/etc/config/'
+    resources:
+      request:
+        cpu: 100mi
+        memory: 100MiB
+      limits:
+        cpu: 1
+        memory: 1GiB
+  volumes:
+  - name: config
+    configMap:
+      name: configmaptest
+      items:
+      - key: key1
+        path: keys/key1
+      - key: key2
+        path: keys/key2
+      - key: file.yaml
+        path: yaml/file.yaml
