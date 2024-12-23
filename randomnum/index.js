@@ -2,7 +2,7 @@ const express = require('express');
 const os = require('os');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.get('/', (req, res) => {
     const hostname = os.hostname();
